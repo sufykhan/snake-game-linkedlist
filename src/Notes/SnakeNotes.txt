@@ -1,0 +1,18 @@
+-[] Create Board
+    -[] Matrix Representation 
+    (2D Array in React)->https://www.pluralsight.com/guides/display-multidimensional-array-data-in-react
+    (Display Property Inline Block)->https://www.geeksforgeeks.org/what-is-the-difference-between-display-inline-and-display-inline-block-in-css/#:~:text=%E2%80%9Cdisplay%3A%20inline%2Dblock%E2%80%9D,same%20line%20as%20adjacent%20content).
+    
+-[] Create Snake  
+    -[] Linked List Representation
+    -[] Handle Snake Growth
+    -[] Handle Snake Direction      
+-[] Styles
+    -[] Snake Cells
+    -[] Food Cells
+-[] Handle Keypresses
+-[] Handle Movements
+-[] Handle food consumption
+-[] Handle collisions
+-[] Handle Score    
+-[] Handle Game Over
