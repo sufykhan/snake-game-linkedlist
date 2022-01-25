@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import "../Styles/Boards.css";
-
+import {useInterval} from '../Components/Utils.js';
 
 
 class LinkedListNode{
@@ -18,7 +18,12 @@ class SinglyLinkedList{
 }
 const BOARD_SIZE = 12;
 
-
+const Direction = {
+    UP: 'up',
+    DOWN: 'down',
+    LEFT: 'left',
+    RIGHT: 'right'
+}
 
 const Boards = () => {
 
@@ -34,8 +39,41 @@ const Boards = () => {
   const [snake,setSnake]=useState(new SinglyLinkedList(snakeStartPosition(board)));
   const [snakeCell,setSnakeCell] = useState(new Set([snake.head.value.cell]));
   const [foodCell,setFoodCell]=useState(getFoodPosition(snakeCell));
-  const [direction,setDirection]=useState('right');
-  
+  const [direction,setDirection]=useState(Direction.RIGHT);
+
+  const moveSnake = () => {
+      const currHeadCoordinate={row:snake.head.value.row,col:snake.head.value.col};
+      const nextHeadCoordinate=getNextHeadCoordinate(currHeadCoordinate,direction);
+      const nextHeadCell=board[nextHeadCoordinate.row][nextHeadCoordinate.col];
+      
+      const newCell={
+            row:nextHeadCoordinate.row,
+            col:nextHeadCoordinate.col,
+            cell:nextHeadCell,
+      }
+      console.log(newCell);
+      const newHead=new LinkedListNode(newCell);
+
+      const currHead=snake.head;
+      snake.head=newHead;
+      currHead.next=newHead;
+
+      const  newSnakeCells=new Set(snakeCell);
+      newSnakeCells.add(nextHeadCell);
+      newSnakeCells.delete(snake.tail.value.cell);
+
+      snake.tail=snake.tail.next;
+
+    if(snake.tail===null) snake.tail=snake.head;
+
+      setSnakeCell(newSnakeCells);
+
+  }
+ 
+  useInterval(()=>{
+        moveSnake();
+  },2000);
+ 
   return (
   <div className="board">
     {board.map((row, rowIndex) =>{
@@ -98,4 +136,25 @@ const getFoodPosition=(snakeCell)=>{
         foodPosition=Math.floor(Math.random()*BOARD_SIZE*BOARD_SIZE);
     }
     return foodPosition;
+}
+
+const getNextHeadCoordinate = (currHeadCoordinate,direction) => {
+    let nextHeadCoordinate={row:null,col:null};
+    if(direction===Direction.UP){
+        nextHeadCoordinate.row=currHeadCoordinate.row-1;
+        nextHeadCoordinate.col=currHeadCoordinate.col;
+    }
+    if(direction===Direction.RIGHT){
+        nextHeadCoordinate.row=currHeadCoordinate.row;
+        nextHeadCoordinate.col=currHeadCoordinate.col+1;
+    }
+    if(direction===Direction.LEFT){
+        nextHeadCoordinate.row=currHeadCoordinate.row;
+        nextHeadCoordinate.col=currHeadCoordinate.col-1;
+    }
+    if(direction===Direction.DOWN){
+        nextHeadCoordinate.row=currHeadCoordinate.row+1;
+        nextHeadCoordinate.col=currHeadCoordinate.col;
+    }
+    return nextHeadCoordinate;
 }

@@ -7,9 +7,9 @@
     -[X] Linked List Representation
     -[] Handle Snake Direction
     -[] Handle Snake Growth 
--[] Styles
-    -[] Snake Cells
-    -[] Food Cells
+-[X] Styles
+    -[X] Snake Cells
+    -[X] Food Cells
 -[] Handle Keypresses
 -[] Handle Movements
 -[] Handle food consumption
