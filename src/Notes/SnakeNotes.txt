@@ -11,7 +11,7 @@
     -[X] Snake Cells
     -[X] Food Cells
 -[] Handle Keypresses
--[] Handle Movements
+-[X] Handle Movements
 -[] Handle food consumption
 -[] Handle collisions
 -[] Handle Score    
