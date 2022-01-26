@@ -2,11 +2,11 @@
     outline: 2px solid;
 }
 .row{
-    height: 50px;
+    height: 30px;
 }
 .cell{
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
     outline: 1px solid;
     display: inline-block;
 }
@@ -15,4 +15,7 @@
 }
 .food-cell{
     background-color: #ffcc00;
+}
+.food-cell-reverse{
+    background-color: #ff0000;
 }
