@@ -16,7 +16,7 @@ class SinglyLinkedList{
     this.tail = node;
   }
 }
-const BOARD_SIZE = 12;
+const BOARD_SIZE = 13;
 
 const Direction = {
     UP: 'up',
@@ -47,8 +47,6 @@ const Boards = () => {
       return newFoodPosition;
   }
   const growTheSnake=(prevHeadCoordinate)=>{
-        if(snake.head===snake.tail){
-            console.log("GOT")
             let val={row:prevHeadCoordinate.row,col:prevHeadCoordinate.col,cell:board[prevHeadCoordinate.row][prevHeadCoordinate.col]};
             let newTail=new LinkedListNode(val);
             
@@ -56,28 +54,41 @@ const Boards = () => {
             snake.tail=newTail;
             snake.tail.next=currTail;
 
+
             snakeCell.add(newTail.value.cell);
             setSnakeCell(snakeCell);
-        }
-        else{
-            console.log("Handle Later");
-        }
+       
   }
-  
   const gameOver=()=>{
-        console.log('Game Over');
-  }
+       
+   setSnake(new SinglyLinkedList(snakeStartPosition(board)));
+   setFoodCell(produceNewFoodPosition());
+   snakeCell.clear();
+   setSnakeCell(new Set([snake.head.value.cell]));
+   setPause(!pause);
+
+}
+
+  
   const moveSnake = () => {
       const currHeadCoordinate={row:snake.head.value.row,col:snake.head.value.col};
-      const nextHeadCoordinate=getNextHeadCoordinate(currHeadCoordinate,direction);
-      
+      const currTailCoordinate={row:snake.tail.value.row,col:snake.tail.value.col};
+     
     //Handling Valid Position
-    if(!isValidPosition(nextHeadCoordinate)){
-        gameOver();
-    }
+  
+    const nextHeadCoordinate=getNextHeadCoordinate(currHeadCoordinate,direction);
     const nextHeadCell=board[nextHeadCoordinate.row][nextHeadCoordinate.col];
+    if(nextHeadCoordinate.row>=BOARD_SIZE || nextHeadCoordinate.col>=BOARD_SIZE || nextHeadCoordinate.row<0 || nextHeadCoordinate.col<0 ||(nextHeadCoordinate.row===currTailCoordinate.row && nextHeadCoordinate.col===currTailCoordinate.col)){
+        gameOver();
+       
       
-      const newCell={
+    }
+    else if(nextHeadCoordinate.row>0 && nextHeadCoordinate.col>0 && snakeCell.has(nextHeadCell) ){
+        gameOver();
+        
+    }
+    else{
+        const newCell={
             row:nextHeadCoordinate.row,
             col:nextHeadCoordinate.col,
             cell:nextHeadCell,
@@ -91,8 +102,9 @@ const Boards = () => {
 
 
       const  newSnakeCells=new Set(snakeCell);
-      newSnakeCells.add(nextHeadCell);
+      
       newSnakeCells.delete(snake.tail.value.cell);
+      newSnakeCells.add(nextHeadCell);
       
       snake.tail=snake.tail.next;
 
@@ -102,12 +114,15 @@ const Boards = () => {
 
       //Handling Food Consumption
       if(newCell.cell===foodCell){
+        
+        growTheSnake(currTailCoordinate);
         setFoodCell(produceNewFoodPosition());
-        growTheSnake(currHeadCoordinate);
       }
 
 
       setSnakeCell(newSnakeCells);
+    }
+      
 
   }
  
@@ -126,21 +141,25 @@ const Boards = () => {
     }     
   }
 
+  const [pause,setPause]=useState(false);
   //USEINTERVAL HOOK -->Using setInterval to move snake was creating a bug due to clash between render and componentdidupdate.
   useInterval(()=>{
-        moveSnake();
-  },2000);
+        if(pause){ moveSnake()}
+       
+  },200);
  
   return (
   <div className="board">
+  <button onClick={()=>`${setPause(!pause)}`}>Button</button>
     {board.map((row, rowIndex) =>{
         return (
+            
         <div className="row" key={rowIndex}>
             {row.map((cellValue) =>{
                 const classNameVal=getClassName(cellValue,foodCell,snakeCell);
                 return (
                 <div className={classNameVal} key={cellValue}>
-                    {cellValue}
+                    
                 </div>
                 )
             })}
@@ -218,8 +237,10 @@ const getNextHeadCoordinate = (currHeadCoordinate,direction) => {
 }
 
 const isValidPosition=(newCellCoordinate)=>{
-    if(newCellCoordinate.row>BOARD_SIZE || newCellCoordinate.col>BOARD_SIZE || newCellCoordinate.row<0 || newCellCoordinate.col<0){
+    console.log(newCellCoordinate.row,newCellCoordinate.col); 
+    if(newCellCoordinate.row>=BOARD_SIZE || newCellCoordinate.col>=BOARD_SIZE || newCellCoordinate.row<0 || newCellCoordinate.col<0){
         return false;
     }
+   
     return true;
 }
