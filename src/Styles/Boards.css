@@ -11,11 +11,14 @@
     display: inline-block;
 }
 .snake-cell{
-    background-color: #00ccff;
+    background-color: #0dc036;
 }
 .food-cell{
-    background-color: #ffcc00;
+    background-color: #003cff;
 }
 .food-cell-reverse{
     background-color: #ff0000;
+}
+.head-cell{
+    background-color: #ffffff;
 }
